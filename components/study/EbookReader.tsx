@@ -43,7 +43,7 @@ export default function EbookReader({
     useEffect(() => {
         if (!activeChapter) return;
 
-        setTitle(activeChapter.title);
+        // setTitle(activeChapter.title);
 
         const actions = (
             <div className="flex items-center gap-3">
