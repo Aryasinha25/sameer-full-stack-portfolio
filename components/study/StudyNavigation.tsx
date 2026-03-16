@@ -55,9 +55,9 @@ export function StudyNavigation({
                     <h4 className="text-lg font-black tracking-tighter text-foreground truncate">
                         {item.topic}
                     </h4>
-                    <div className="flex items-center gap-2 opacity-40">
+                    {/* <div className="flex items-center gap-2 opacity-40">
                         <span className="text-[10px] font-bold tracking-widest">{item.chapters.length} investigation units</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -65,7 +65,7 @@ export function StudyNavigation({
             <ScrollArea className="flex-1 w-full min-h-0">
                 <div className="px-4 py-6 space-y-8">
                     {/* Chapter Navigation */}
-                    <div className="space-y-1">
+                    {/* <div className="space-y-1">
                         <div className="px-4 mb-4 text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30">investigation units</div>
                         <div className="space-y-1">
                             {item.chapters.map((chapter) => (
@@ -92,7 +92,7 @@ export function StudyNavigation({
                                 </Link>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Dynamic Table of Contents */}
                     {toc.length > 0 && (
