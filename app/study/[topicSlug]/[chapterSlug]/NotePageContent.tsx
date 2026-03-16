@@ -31,7 +31,7 @@ export default function NotePageContent({ params, initialNote, initialFolder }: 
                 if (noteRes.success && folderRes.success) {
                     setCurrentNote(noteRes.data.note);
                     setFolder(folderRes.data.folder);
-                    setAllNotesInFolder(folderRes.data.notes);
+                    setAllNotesInFolder([...folderRes.data.notes].reverse());
                 } else {
                     setError('Content not found or inaccessible.');
                 }

@@ -21,7 +21,7 @@ export default function TopicPageContent({ params, initialFolder }: { params: { 
                 const response = await getPublicFolderBySlug(topicSlug);
                 if (response.success) {
                     setFolder(response.data.folder);
-                    setNotes(response.data.notes);
+                    setNotes([...response.data.notes].reverse());
                 } else {
                     setError('Folder not found or private');
                 }
