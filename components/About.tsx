@@ -177,8 +177,8 @@ export default function About() {
                         {/* Mobile: Key Highlights */}
                         <div className="grid grid-cols-2 gap-3 pt-4">
                             <div className="p-3 bg-white dark:bg-zinc-800 rounded-xl">
-                                <div className="text-2xl font-black text-primary font-seona">1+</div>
-                                <div className="text-[9px] uppercase font-black tracking-wider text-muted-foreground/60">Years Exp</div>
+                                <div className="text-2xl font-black text-primary font-seona">5+</div>
+                                <div className="text-[9px] uppercase font-black tracking-wider text-muted-foreground/60">Achievements</div>
                             </div>
                             <div className="p-3 bg-white dark:bg-zinc-800 rounded-xl">
                                 <div className="text-2xl font-black text-primary font-seona">100+</div>
@@ -196,7 +196,10 @@ export default function About() {
 
                         {/* Mobile: Tech Stack */}
                         <div className="pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50">
-                            <h3 className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/60 mb-3">Core Stack</h3>
+                            <Link href="https://linktr.ee/sameerbagul2004" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between mb-3 group cursor-pointer">
+                                <h3 className="text-[10px] uppercase font-black tracking-widest text-muted-foreground/60 group-hover:text-primary transition-colors">Core Stack</h3>
+                                <div className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">View All →</div>
+                            </Link>
                             <div className="flex flex-wrap gap-2">
                                 {['TypeScript', 'React', 'Next.js', 'Node.js', 'Python', 'AI/ML'].map((tech) => (
                                     <span key={tech} className="px-3 py-1.5 bg-white dark:bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-wider text-foreground">
@@ -210,7 +213,7 @@ export default function About() {
                         <div className="flex items-center justify-between pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50">
                             <div className="flex items-center gap-2">
                                 <MapPin size={14} className="text-primary" />
-                                <span className="text-xs font-bold text-foreground">{PERSONAL_INFO.location}</span>
+                                <span className="text-sm font-bold text-foreground">{PERSONAL_INFO.location}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -257,27 +260,29 @@ export default function About() {
                     {/* div16: Stat 2 (Years) */}
                     <div className="md:col-span-2 md:row-span-2 md:col-start-3 md:row-start-3">
                         <BentoStatCard
-                            value="1+"
-                            label="Years Exp"
-                            icon={Award}
+                            value="5+"
+                            label="Achievements"
+                            icon={Trophy}
                             colorClass="bg-purple-500/10 dark:bg-purple-500/20 text-purple-500 h-full"
                         />
                     </div>
 
                     {/* div17: Swapped -> Stack Highlights */}
                     <div className="md:row-span-2 md:col-start-5 md:row-start-3">
-                        <Card className="p-4 bg-zinc-50 dark:bg-zinc-900 border-none rounded-2xl h-full flex flex-col justify-between group transition-all duration-300">
-                            <div className="flex justify-between items-start">
-                                <Code2 className="w-4 h-4 text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity" />
-                                <span className="text-[7px] font-black uppercase tracking-tighter text-muted-foreground/30">Stack</span>
-                            </div>
-                            <div className="flex flex-col gap-2 grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 mt-2">
-                                <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold">TS</div>
-                                <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold">RE</div>
-                                <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold">NX</div>
-                                <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold">ND</div>
-                            </div>
-                        </Card>
+                        <Link href="https://linktr.ee/sameerbagul2004" target="_blank" rel="noopener noreferrer" className="block h-full group">
+                            <Card className="p-4 bg-zinc-50 dark:bg-zinc-900 border-none rounded-2xl h-full flex flex-col justify-between group transition-all duration-300 hover:border-emerald-500/30 border border-transparent">
+                                <div className="flex justify-between items-start">
+                                    <Code2 className="w-4 h-4 text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity" />
+                                    <span className="text-[7px] font-black uppercase tracking-tighter text-muted-foreground/30 group-hover:text-emerald-500 transition-colors">Stack</span>
+                                </div>
+                                <div className="flex flex-col gap-2 grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 mt-2">
+                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">TS</div>
+                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">RE</div>
+                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">NX</div>
+                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">ND</div>
+                                </div>
+                            </Card>
+                        </Link>
                     </div>
 
                     {/* div11: Timezone & Live Clock - Vertical Orientaton */}
@@ -318,8 +323,8 @@ export default function About() {
                                 <Globe2 className="w-3 h-3 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <div className="relative z-10">
-                                <span className="text-[11px] font-black block tracking-tighter text-foreground uppercase group-hover:translate-x-1 transition-transform font-seona not-italic">{PERSONAL_INFO.location}</span>
-                                <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/40 mt-1 not-italic">BASED IN INDIA</p>
+                                <span className="text-[13px] font-black block tracking-tighter text-foreground uppercase group-hover:translate-x-1 transition-transform font-seona not-italic">{PERSONAL_INFO.location}</span>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 mt-1 not-italic">BASED IN INDIA</p>
                             </div>
                         </Card>
                     </div>
@@ -331,8 +336,8 @@ export default function About() {
                                 <Flame className="w-16 h-16 text-orange-500" />
                             </div>
                             <div className="relative z-10">
-                                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-orange-500/60 mb-2 block not-italic">Focus</span>
-                                <h4 className="text-[11px] font-black uppercase tracking-tight leading-tight group-hover:translate-x-1 transition-transform font-seona not-italic">AI Agents &<br />Automation</h4>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500/60 mb-2 block not-italic">Focus</span>
+                                <h4 className="text-[13px] font-black uppercase tracking-tight leading-tight group-hover:translate-x-1 transition-transform font-seona not-italic">Scalable<br />Systems</h4>
                             </div>
                             <div className="relative z-10 w-4 h-4 bg-orange-500/20 rounded-full flex items-center justify-center">
                                 <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" />

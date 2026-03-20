@@ -127,7 +127,7 @@ export default function Hero() {
 
                             {/* Stats DataSheet Style */}
                             <div className="flex items-center gap-6 sm:gap-12 sm:pl-6 sm:border-l sm:border-white/10">
-                                <StatBlock value="1+" label="Years of Experience" />
+                                <StatBlock value="5+" label="Achievements" />
                                 <StatBlock value="100+" label="Projects Completed" />
                                 <Link
                                     href="/projects"
