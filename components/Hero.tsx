@@ -17,16 +17,18 @@ const SocialIcon = ({ icon: Icon, href }: { icon: any; href: string }) => (
     <Link
         href={href}
         target="_blank"
-        className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-zinc-400 hover:text-primary hover:border-primary/40 transition-all hover:scale-110"
+        className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 hover:-translate-y-1 group"
     >
-        <Icon size={16} />
+        <Icon size={18} className="group-hover:scale-110 transition-transform" />
     </Link>
 );
 
 const StatBlock = ({ value, label }: { value: string; label: string }) => (
-    <div className="space-y-1">
-        <h3 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground font-seona not-italic">{value}</h3>
-        <p className="text-[9px] sm:text-[10px] uppercase font-black tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground/60 leading-tight">
+    <div className="group">
+        <h3 className="text-4xl sm:text-5xl font-bold tracking-tighter text-foreground not-italic mb-1 group-hover:text-primary transition-colors">
+            {value}
+        </h3>
+        <p className="text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground/40 leading-tight group-hover:text-muted-foreground/60 transition-colors">
             {label.split(' ').map((line, i) => (
                 <span key={i} className="block">{line}</span>
             ))}
@@ -70,35 +72,39 @@ export default function Hero() {
             <div className="container relative z-10 w-full px-4 sm:px-6 mx-auto max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     {/* Left Column: Text Content */}
-                    <div className="lg:col-span-7 space-y-8 lg:space-y-12">
+                    <div className="lg:col-span-7 space-y-10 lg:space-y-14">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="space-y-4 sm:space-y-6 md:space-y-8"
+                            className="space-y-6 sm:space-y-8"
                         >
-
-                            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[140px] font-black uppercase tracking-[-0.06em] leading-[0.85] text-foreground font-seona not-italic break-words">
-                                {PERSONAL_INFO.name.split(' ')[0]}<br />
-                                {PERSONAL_INFO.name.split(' ')[1]}
+                            <h1 className="text-6xl sm:text-7xl lg:text-8xl xl:text-[130px] font-black uppercase tracking-[-0.05em] leading-[0.82] text-white font-seona not-italic -ml-1">
+                                <span className="block opacity-90">{PERSONAL_INFO.name.split(' ')[0]}</span>
+                                <span className="block">{PERSONAL_INFO.name.split(' ')[1]}</span>
                             </h1>
 
-                            <div className="space-y-3 sm:space-y-4 md:space-y-6 max-w-lg">
-                                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-foreground/90 uppercase tracking-tight not-italic">
+                            <div className="space-y-4 sm:space-y-6 max-w-xl relative">
+                                <h2 className="text-xl sm:text-2xl font-black text-foreground/90 uppercase tracking-tight not-italic flex items-center gap-3">
                                     {PERSONAL_INFO.role}
                                 </h2>
-                                <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed font-medium not-italic">
-                                    Architecting <span className="text-foreground font-bold">AI/ML</span> systems and <span className="text-foreground font-bold">Full-stack</span> experiences.
-                                    <span className="flex items-center gap-2 mt-4 text-base sm:text-lg text-primary/80 font-black lowercase tracking-tight font-seona not-italic">
-                                        <span className="opacity-40 text-sm">↳</span>
-                                        {typedText}
-                                        <span className="w-1.5 h-4 bg-primary animate-pulse ml-0.5" />
-                                    </span>
-                                </p>
+
+                                <div className="space-y-1 sm:space-y-2">
+                                    <p className="text-base sm:text-lg text-muted-foreground/80 leading-relaxed font-medium not-italic max-w-md">
+                                        Architecting <span className="text-orange-400 font-bold border-b-2 border-orange-400/20">AI/ML</span> systems and <span className="text-yellow-300 font-bold border-b-2 border-yellow-300/20">Full-stack</span> experiences.
+                                    </p>
+
+                                    <div className="group max-w-sm">
+                                        <p className="text-base sm:text-lg md:text-xl text-zinc-400 font-medium leading-relaxed italic">
+                                            "{typedText}"
+                                            <span className="inline-block w-1 h-3.5 bg-primary/60 ml-2 animate-pulse align-middle" />
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="pt-3 sm:pt-4 border-t border-white/5 max-w-md">
-                                <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-muted-foreground/40 leading-relaxed">
+                            <div className="pt-6 sm:pt-8 border-t border-white/5 max-w-sm">
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500/50 leading-relaxed">
                                     code as music • performance as art
                                 </p>
                             </div>
@@ -120,14 +126,14 @@ export default function Hero() {
                             </div>
 
                             {/* Stats DataSheet Style */}
-                            <div className="flex gap-6 sm:gap-12 sm:pl-6 sm:border-l sm:border-white/10">
+                            <div className="flex items-center gap-6 sm:gap-12 sm:pl-6 sm:border-l sm:border-white/10">
                                 <StatBlock value="1+" label="Years of Experience" />
                                 <StatBlock value="100+" label="Projects Completed" />
                                 <Link
                                     href="/projects"
-                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-all hover:scale-110 shrink-0"
+                                    className="w-11 h-11 rounded-xl bg-white/5 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-all hover:scale-110 shrink-0"
                                 >
-                                    <ArrowUpRight size={18} />
+                                    <ArrowUpRight size={20} />
                                 </Link>
                             </div>
                         </motion.div>
