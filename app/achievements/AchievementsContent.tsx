@@ -2,20 +2,25 @@
 
 import React, { useState, useMemo } from 'react';
 import { usePortfolio } from '@/context/PortfolioContext';
-import AchievementCard from '@/components/achievements/AchievementCard';
+import AchievementTimeline from '@/components/achievements/AchievementTimeline';
 import { Search, Trophy, Medal, Star, Award, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export default function AchievementsContent() {
     const { achievements, loading, error } = usePortfolio();
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState<'all' | 'award' | 'certification'>('all');
 
     const filteredAchievements = useMemo(() => {
-        return achievements.filter(ach =>
-            ach.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ach.description.toLowerCase().includes(searchQuery.toLowerCase())
-        ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }, [achievements, searchQuery]);
+        return achievements.filter(ach => {
+            const matchesSearch = ach.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                ach.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                ach.organization.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesType = filterType === 'all' || ach.type === filterType;
+            return matchesSearch && matchesType;
+        }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }, [achievements, searchQuery, filterType]);
 
     const stats = useMemo(() => [
         { label: 'Total Wins', value: achievements.length, icon: Trophy },
@@ -76,6 +81,23 @@ export default function AchievementsContent() {
                         />
                     </div>
 
+                    <div className="flex items-center gap-2 p-1 bg-white/50 dark:bg-zinc-950/50 rounded-full border border-zinc-200/50 dark:border-zinc-800/50">
+                        {['all', 'award', 'certification'].map((type) => (
+                            <button
+                                key={type}
+                                onClick={() => setFilterType(type as any)}
+                                className={cn(
+                                    "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                    filterType === type 
+                                        ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                                        : "hover:bg-zinc-200 dark:hover:bg-zinc-800 text-muted-foreground"
+                                )}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
+
                     <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground px-4">
                         <span className="flex items-center gap-2">
                             <span className={`w-2 h-2 rounded-full ${loading ? 'bg-amber-500 animate-pulse' : 'bg-primary'}`} />
@@ -104,17 +126,12 @@ export default function AchievementsContent() {
                         </motion.div>
                     ) : (
                         <motion.div
-                            key="grid"
+                            key="timeline"
                             layout
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                         >
-                            {filteredAchievements.map((achievement, index) => (
-                                <AchievementCard
-                                    key={achievement._id}
-                                    achievement={achievement}
-                                    index={index}
-                                />
-                            ))}
+                            <AchievementTimeline achievements={filteredAchievements} />
                         </motion.div>
                     )}
                 </AnimatePresence>

@@ -20,7 +20,8 @@ import {
     Linkedin,
     MapPin,
     Trophy,
-    Loader2
+    Loader2,
+    ArrowUpRight
 } from 'lucide-react';
 import Image from 'next/image';
 import { PERSONAL_INFO } from '@/lib/constants/personalInfo';
@@ -267,19 +268,37 @@ export default function About() {
                         />
                     </div>
 
-                    {/* div17: Swapped -> Stack Highlights */}
+                    {/* div17: Stack Hub Tile */}
                     <div className="md:row-span-2 md:col-start-5 md:row-start-3">
                         <Link href="https://linktr.ee/sameerbagul2004" target="_blank" rel="noopener noreferrer" className="block h-full group">
-                            <Card className="p-4 bg-zinc-50 dark:bg-zinc-900 border-none rounded-2xl h-full flex flex-col justify-between group transition-all duration-300 hover:border-emerald-500/30 border border-transparent">
-                                <div className="flex justify-between items-start">
-                                    <Code2 className="w-4 h-4 text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity" />
-                                    <span className="text-[7px] font-black uppercase tracking-tighter text-muted-foreground/30 group-hover:text-emerald-500 transition-colors">Stack</span>
+                            <Card className="p-5 bg-zinc-50 dark:bg-zinc-900 border-none rounded-3xl h-full flex flex-col justify-between group transition-all duration-500 hover:ring-2 ring-emerald-500/30 overflow-hidden relative">
+                                <div className="absolute -top-12 -left-12 w-24 h-24 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all duration-700" />
+                                
+                                <div className="relative z-10 flex justify-between items-start">
+                                    <div className="p-2 bg-emerald-500/10 rounded-xl group-hover:scale-110 transition-transform duration-500">
+                                        <Code2 className="w-4 h-4 text-emerald-500" />
+                                    </div>
+                                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 group-hover:text-emerald-500 transition-colors mt-2">Stack Hub</span>
                                 </div>
-                                <div className="flex flex-col gap-2 grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 mt-2">
-                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">TS</div>
-                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">RE</div>
-                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">NX</div>
-                                    <div className="w-full h-8 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-[8px] font-bold group-hover:bg-emerald-500/10 transition-colors">ND</div>
+
+                                <div className="relative z-10 grid grid-cols-2 gap-2 mt-4 flex-1">
+                                    {[
+                                        { tag: 'TS', color: 'group-hover:text-blue-500 group-hover:bg-blue-500/5 group-hover:border-blue-500/20' },
+                                        { tag: 'RE', color: 'group-hover:text-cyan-500 group-hover:bg-cyan-500/5 group-hover:border-cyan-500/20' },
+                                        { tag: 'NX', color: 'group-hover:text-zinc-100 group-hover:bg-zinc-100/5 group-hover:border-zinc-100/20' },
+                                        { tag: 'ND', color: 'group-hover:text-emerald-500 group-hover:bg-emerald-500/5 group-hover:border-emerald-500/20' }
+                                    ].map((item, i) => (
+                                        <div key={i} className={cn("rounded-xl border border-transparent bg-zinc-100/50 dark:bg-zinc-800/30 flex items-center justify-center text-[10px] font-black transition-all duration-500", item.color)}>
+                                            {item.tag}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="relative z-10 mt-4 pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between">
+                                    <span className="text-[7px] font-black uppercase tracking-widest text-muted-foreground/20 group-hover:text-muted-foreground/40 transition-colors">LINKTREE PORTAL</span>
+                                    <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">
+                                        <ArrowUpRight className="w-3 h-3 group-hover:scale-110 transition-transform" />
+                                    </div>
                                 </div>
                             </Card>
                         </Link>

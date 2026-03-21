@@ -76,9 +76,11 @@ export interface Testimonial {
 export interface Achievement {
     _id: string;
     title: string;
+    organization: string;
     description: string;
     date: string;
-    icon?: string;
+    image?: string;
+    type: 'award' | 'certification';
 }
 
 
