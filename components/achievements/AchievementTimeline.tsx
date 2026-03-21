@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Calendar, ExternalLink, Award, CheckCircle2, X, ArrowRight, ArrowLeft } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { type Achievement } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -151,10 +152,12 @@ const AchievementTimeline = ({ achievements }: AchievementTimelineProps) => {
                                     </div>
                                 </div>
 
-                                <div className="prose prose-lg dark:prose-invert max-w-none mb-12 flex-grow">
-                                    <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-lg">
-                                        {selectedAchievement.description}
-                                    </p>
+                                <div className="prose prose-lg dark:prose-invert max-w-none mb-12 flex-grow overflow-hidden">
+                                     <div className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-lg">
+                                        <ReactMarkdown>
+                                            {selectedAchievement.description}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
 
                                 <div className="pt-10 border-t border-zinc-100 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-6 mt-auto">
