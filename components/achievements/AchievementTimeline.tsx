@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Medal, Calendar, ExternalLink, Award, CheckCircle2, X } from 'lucide-react';
+import { Trophy, Medal, Calendar, ExternalLink, Award, CheckCircle2, X, ArrowRight, ArrowLeft } from 'lucide-react';
 import { type Achievement } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -13,123 +13,160 @@ interface AchievementTimelineProps {
 const AchievementTimeline = ({ achievements }: AchievementTimelineProps) => {
     const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null);
 
-    return (
-        <div className="relative max-w-5xl mx-auto px-2 md:px-4 py-12">
-            {/* Vertical Line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent md:-translate-x-1/2" />
+    // Group achievements into rows of 3 for desktop
+    const rows: Achievement[][] = [];
+    for (let i = 0; i < achievements.length; i += 3) {
+        rows.push(achievements.slice(i, i + 3));
+    }
 
-            <div className="space-y-12 md:space-y-16">
-                {achievements.map((achievement, index) => (
-                    <TimelineItem 
-                        key={achievement._id} 
-                        achievement={achievement} 
-                        index={index} 
-                        onSelect={() => setSelectedAchievement(achievement)}
-                    />
-                ))}
+    return (
+        <div className="relative max-w-7xl mx-auto px-4 py-20">
+            {/* Desktop Snake Timeline */}
+            <div className="hidden lg:block space-y-24">
+                {rows.map((row, rowIndex) => {
+                    const isReverse = rowIndex % 2 !== 0;
+                    
+                    return (
+                        <div key={rowIndex} className="relative">
+                            <div 
+                                className="grid grid-cols-3 gap-12" 
+                                dir={isReverse ? "rtl" : "ltr"}
+                            >
+                                {row.map((achievement, colIndex) => {
+                                    const actualIndex = rowIndex * 3 + colIndex;
+                                    return (
+                                        <div key={achievement._id} className="relative">
+                                            <CompactTimelineCard 
+                                                achievement={achievement} 
+                                                index={actualIndex}
+                                                onSelect={() => setSelectedAchievement(achievement)}
+                                            />
+                                            {/* Connecting Line (Horizontal) */}
+                                            {colIndex < row.length - 1 && (
+                                                <div className={cn(
+                                                    "absolute top-1/2 -translate-y-1/2 w-12 h-0.5 border-t-2 border-dashed border-primary/30 z-0",
+                                                    isReverse ? "-left-12" : "-right-12"
+                                                )} />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            
+                            {/* Row Turn Connector (Vertical) */}
+                            {rowIndex < rows.length - 1 && (
+                                <div className={cn(
+                                    "absolute -bottom-24 w-0.5 h-24 border-l-2 border-dashed border-primary/30",
+                                    isReverse ? "left-12" : "right-12"
+                                )} />
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Mobile/Tablet Vertical Timeline (Simplified) */}
+            <div className="lg:hidden relative">
+                 <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
+                 <div className="space-y-12">
+                    {achievements.map((achievement, index) => (
+                        <div key={achievement._id} className="relative pl-16">
+                            <div className="absolute left-4 top-4 w-4 h-4 rounded-full bg-zinc-950 border-2 border-primary z-10" />
+                            <CompactTimelineCard 
+                                achievement={achievement} 
+                                index={index}
+                                onSelect={() => setSelectedAchievement(achievement)}
+                            />
+                        </div>
+                    ))}
+                 </div>
             </div>
 
             {/* Detail Modal */}
             <AnimatePresence>
                 {selectedAchievement && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSelectedAchievement(null)}
-                            className="absolute inset-0 bg-zinc-950/80 backdrop-blur-md"
+                            className="absolute inset-0 bg-zinc-950/90 backdrop-blur-xl"
                         />
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 40 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-3xl bg-white dark:bg-zinc-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row max-h-[90vh]"
+                            exit={{ opacity: 0, scale: 0.95, y: 40 }}
+                            className="relative w-full max-w-6xl bg-white dark:bg-zinc-900 rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.1)] border border-zinc-200/50 dark:border-zinc-800/50 flex flex-col lg:flex-row max-h-[90vh]"
                         >
                             <button 
                                 onClick={() => setSelectedAchievement(null)}
-                                className="absolute top-6 right-6 z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors"
+                                className="absolute top-8 right-8 z-50 p-3 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-primary transition-all shadow-lg"
                             >
-                                <X size={20} />
+                                <X size={24} />
                             </button>
 
                             {/* Modal Image Section */}
-                            <div className="w-full md:w-5/12 h-64 md:h-auto bg-zinc-100 dark:bg-zinc-800 relative">
+                            <div className="w-full lg:w-7/12 h-[300px] lg:h-auto bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden group">
                                 {selectedAchievement.image ? (
                                     <img 
                                         src={selectedAchievement.image} 
                                         alt={selectedAchievement.title} 
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-contain p-4 lg:p-12 transition-transform duration-1000 group-hover:scale-105"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-primary/20">
-                                        <Award size={120} />
+                                    <div className="w-full h-full flex items-center justify-center text-primary/10">
+                                        <Award size={200} />
                                     </div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
-                                <div className="absolute bottom-6 left-6 md:hidden">
-                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-widest">
-                                        {selectedAchievement.type === 'award' ? <Trophy size={14} /> : <Medal size={14} />}
-                                        {selectedAchievement.type}
-                                    </div>
-                                </div>
+                                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-zinc-900/40 to-transparent lg:hidden" />
                             </div>
 
                             {/* Modal Info Section */}
-                            <div className="flex-1 p-8 md:p-12 overflow-y-auto custom-scrollbar">
-                                <div className="hidden md:flex items-center gap-3 mb-6">
-                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
-                                        {selectedAchievement.type === 'award' ? <Trophy size={14} /> : <Medal size={14} />}
+                            <div className="flex-1 p-8 lg:p-16 overflow-y-auto custom-scrollbar flex flex-col">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest">
+                                        {selectedAchievement.type === 'award' ? <Trophy size={16} /> : <Medal size={16} />}
                                         {selectedAchievement.type}
                                     </div>
-                                    <div className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                                    <div className="flex items-center gap-2 text-muted-foreground text-[10px] font-bold uppercase tracking-widest">
-                                        <Calendar size={14} />
+                                    <div className="flex items-center gap-2 text-muted-foreground text-xs font-bold uppercase tracking-widest">
+                                        <Calendar size={16} />
                                         {new Date(selectedAchievement.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                     </div>
                                 </div>
 
-                                <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4 leading-tight">
+                                <h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-8 leading-[1.1] text-zinc-900 dark:text-white">
                                     {selectedAchievement.title}
                                 </h2>
 
-                                <div className="space-y-4 mb-8">
-                                    <div className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400 font-bold tracking-tight">
-                                        <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-primary">
-                                            <CheckCircle2 size={20} />
+                                <div className="space-y-6 mb-12">
+                                    <div className="flex items-start gap-4 p-6 rounded-3xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800">
+                                        <div className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-900 flex items-center justify-center text-primary shadow-sm border border-zinc-100 dark:border-zinc-800">
+                                            <CheckCircle2 size={24} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 leading-none mb-1">Organization</p>
-                                            <p className="text-lg">{selectedAchievement.organization}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400 font-bold tracking-tight md:hidden">
-                                        <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500">
-                                            <Calendar size={20} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 leading-none mb-1">Date Issued</p>
-                                            <p className="text-lg">{new Date(selectedAchievement.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1 font-black">Issuing Organization</p>
+                                            <p className="text-xl font-bold dark:text-zinc-200">{selectedAchievement.organization}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="prose prose-sm dark:prose-invert max-w-none">
-                                    <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-base">
+                                <div className="prose prose-lg dark:prose-invert max-w-none mb-12 flex-grow">
+                                    <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-lg">
                                         {selectedAchievement.description}
                                     </p>
                                 </div>
 
-                                <div className="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                                        Verified System Record
+                                <div className="pt-10 border-t border-zinc-100 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-6 mt-auto">
+                                    <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.25em] text-zinc-400">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
+                                        Official Credential ID Verified
                                     </div>
                                     <button 
-                                        className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                                        className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-[2rem] bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 text-sm font-black uppercase tracking-widest hover:bg-primary dark:hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1 active:scale-95 shadow-xl shadow-primary/10"
                                     >
                                         View Credential
-                                        <ExternalLink size={14} />
+                                        <ExternalLink size={18} />
                                     </button>
                                 </div>
                             </div>
@@ -141,94 +178,50 @@ const AchievementTimeline = ({ achievements }: AchievementTimelineProps) => {
     );
 };
 
-const TimelineItem = ({ achievement, index, onSelect }: { achievement: Achievement; index: number; onSelect: () => void }) => {
-    const isEven = index % 2 === 0;
-
+const CompactTimelineCard = ({ achievement, index, onSelect }: { achievement: Achievement; index: number; onSelect: () => void }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className={cn(
-                "relative flex flex-col md:flex-row items-center",
-                isEven ? "md:flex-row-reverse" : "md:flex-row"
-            )}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.05 }}
+            onClick={onSelect}
+            className="group cursor-pointer"
         >
-            {/* Timeline Node */}
-            <div className="absolute left-6 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-zinc-950 border-4 border-primary/20 flex items-center justify-center transform -translate-x-1/2 z-20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
-                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary animate-pulse" />
-            </div>
-
-            {/* Content Card Area */}
-            <div className={cn(
-                "w-full md:w-1/2 pl-12 md:pl-0",
-                isEven ? "md:pr-12 lg:pr-16" : "md:pl-12 lg:pl-16"
-            )}>
-                <div className="group relative" onClick={onSelect}>
-                    {/* Glass Card */}
-                    <div className="relative cursor-pointer overflow-hidden bg-white/5 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 transition-all duration-500 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 group-hover:-translate-y-2">
-                        
-                        {/* Background Decoration */}
-                        <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500" />
-                        
-                        <div className="relative z-10">
-                            {/* Header: Date & Type */}
-                            <div className="flex items-center justify-between mb-4 md:mb-6">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                                    {achievement.type === 'award' ? (
-                                        <Trophy className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary" />
-                                    ) : (
-                                        <Medal className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary" />
-                                    )}
-                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary capitalize">
-                                        {achievement.type}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                    <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5 opacity-50" />
-                                    {new Date(achievement.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                                </div>
-                            </div>
-
-                            {/* Image if available */}
-                            {achievement.image && (
-                                <div className="mb-4 md:mb-6 rounded-xl md:rounded-2xl overflow-hidden aspect-video border border-zinc-100 dark:border-zinc-800">
-                                    <img 
-                                        src={achievement.image} 
-                                        alt={achievement.title} 
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Main Content */}
-                            <h3 className="text-xl md:text-2xl font-black tracking-tight mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-2">
-                                {achievement.title}
-                            </h3>
-                            <div className="flex items-center gap-2 mb-4 text-zinc-500 dark:text-zinc-400 font-medium">
-                                <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary/60" />
-                                <span className="text-xs md:text-sm tracking-tight">{achievement.organization}</span>
-                            </div>
-                            
-                            <p className="text-zinc-500 dark:text-zinc-400 text-xs md:text-sm leading-relaxed mb-6 md:mb-8 line-clamp-2 group-hover:line-clamp-3 transition-all duration-500">
-                                {achievement.description}
-                            </p>
-
-                            {/* Footer/Action */}
-                            <div className="flex items-center justify-between pt-4 md:pt-6 border-t border-zinc-100 dark:border-zinc-800">
-                                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30">Click for details</span>
-                                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                    <ExternalLink size={14} />
-                                </div>
-                            </div>
-                        </div>
+            <div className="relative p-6 bg-white/5 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50 rounded-[2rem] transition-all duration-500 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/5">
+                
+                {/* Thumbnail */}
+                {achievement.image && (
+                    <div className="mb-4 rounded-xl overflow-hidden aspect-[16/10] bg-zinc-100 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800">
+                        <img 
+                            src={achievement.image} 
+                            alt={achievement.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
                     </div>
+                )}
+
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">
+                        <span>{new Date(achievement.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                        <div className={cn(
+                            "w-2 h-2 rounded-full",
+                            achievement.type === 'award' ? "bg-amber-500" : "bg-blue-500"
+                        )} />
+                    </div>
+                    <h3 className="font-black tracking-tight text-lg line-clamp-1 group-hover:text-primary transition-colors">
+                        {achievement.title}
+                    </h3>
+                    <p className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider line-clamp-1">
+                        {achievement.organization}
+                    </p>
+                </div>
+
+                {/* Hover Indicator */}
+                <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">Read Detail</span>
                 </div>
             </div>
-
-            {/* Spacer for the other side */}
-            <div className="hidden md:block w-1/2" />
         </motion.div>
     );
 };
