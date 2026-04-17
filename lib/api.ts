@@ -188,8 +188,41 @@ export interface Note {
     description?: string;
     slug: string;
     tags: string[];
+    order?: number;
     updatedAt: string;
 }
+
+const getLeadingNumber = (value: string): number => {
+    const match = value.match(/^\s*(\d+)/);
+    return match ? Number.parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+};
+
+const sortStudyNotes = (notes: Note[]): Note[] => {
+    return [...notes].sort((a, b) => {
+        const aOrder = typeof a.order === 'number' ? a.order : Number.NaN;
+        const bOrder = typeof b.order === 'number' ? b.order : Number.NaN;
+
+        const hasAOrder = Number.isFinite(aOrder);
+        const hasBOrder = Number.isFinite(bOrder);
+
+        if (hasAOrder && hasBOrder && aOrder !== bOrder) {
+            return aOrder - bOrder;
+        }
+
+        if (hasAOrder !== hasBOrder) {
+            return hasAOrder ? -1 : 1;
+        }
+
+        const aNum = getLeadingNumber(a.title);
+        const bNum = getLeadingNumber(b.title);
+
+        if (aNum !== bNum) {
+            return aNum - bNum;
+        }
+
+        return a.title.localeCompare(b.title);
+    });
+};
 
 export const getPublicFolders = async (username?: string): Promise<{ success: boolean, data: { folders: NoteFolder[] } }> => {
     const params = username ? { username } : {};
@@ -198,8 +231,17 @@ export const getPublicFolders = async (username?: string): Promise<{ success: bo
 };
 
 export const getPublicFolderBySlug = async (slug: string, username?: string): Promise<{ success: boolean, data: { folder: NoteFolder, notes: Note[] } }> => {
-    const params = username ? { username } : {};
+    const params = {
+        page: 1,
+        limit: 1000,
+        sortBy: 'order',
+        order: 'asc',
+        ...(username ? { username } : {})
+    };
     const response = await api.get(`/public/notes/folders/${slug}`, { params });
+    if (response?.data?.success && Array.isArray(response?.data?.data?.notes)) {
+        response.data.data.notes = sortStudyNotes(response.data.data.notes);
+    }
     return response.data;
 };
 
